@@ -1,0 +1,50 @@
+section .data
+  fmt1: db "%lf",0
+  fmt2: db "%lf",10
+  two: dq 2
+
+section .bss
+  f1: resq 1
+
+section .text
+global main:
+extern scanf
+extern printf
+main:
+
+  call read
+  fst qword[f1]
+  fldpi
+  fmul ST1
+  fild qword[two]
+  fmul ST1
+
+  call print
+
+  mov eax,1
+  mov ebx,0
+  int 80h
+
+read:
+  push ebp
+  mov ebp,esp
+  sub esp,8
+  lea eax,[ebp-8]
+  push eax
+  push fmt1
+  call scanf
+  fld qword[ebp-8]
+  mov esp,ebp
+  pop ebp
+  ret
+
+print:
+  push ebp
+  mov ebp,esp
+  sub esp,8
+  fst qword[ebp-8]
+  push fmt2
+  call printf
+  mov esp,ebp
+  pop ebp
+  ret
